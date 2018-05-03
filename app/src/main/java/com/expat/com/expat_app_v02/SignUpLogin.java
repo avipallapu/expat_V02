@@ -27,13 +27,15 @@ public class SignUpLogin extends AppCompatActivity {
     private ProgressDialog progressDialog;
     private DatabaseReference mDatabase;
 
-    public void redirectIfLoggedIn() {
+    private void redirectIfLoggedIn(String emailEditText) {
         if (isUserAuthenticated) {
             if (loginModeActive) {
                 Intent intent = new Intent(getApplicationContext(), Dashboard.class);
+                intent.putExtra("userEmail", emailEditText);
                 startActivity(intent);
             } else {
                 Intent intent = new Intent(getApplicationContext(), SetupPassword.class);
+                intent.putExtra("userEmail", emailEditText);
                 startActivity(intent);
             }
         }
@@ -67,17 +69,13 @@ public class SignUpLogin extends AppCompatActivity {
     }
 
     public void signupLogin(View view) {
-        EditText employeeIDEditText = findViewById(R.id.employeeIDEditText);
-        EditText otpEditText = findViewById(R.id.otpEditText);
-
-        EditText emailEditText = findViewById(R.id.emailEditText);
-        EditText passwordEditText = findViewById(R.id.passwordEditText);
-
-        Log.i("info", emailEditText.getText().toString());
-        Log.i("info", otpEditText.getText().toString());
+        String employeeIDEditText = ((EditText) findViewById(R.id.employeeIDEditText)).getText().toString();
+        String otpEditText = ((EditText) findViewById(R.id.otpEditText)).getText().toString();
+        String emailEditText = ((EditText) findViewById(R.id.emailEditText)).getText().toString();
+        String passwordEditText = ((EditText) findViewById(R.id.passwordEditText)).getText().toString();
 
         if (loginModeActive) {
-            firebaseAuth.signInWithEmailAndPassword(emailEditText.getText().toString(), passwordEditText.getText().toString())
+            firebaseAuth.signInWithEmailAndPassword(emailEditText, passwordEditText)
                     .addOnCompleteListener(this, (task) -> {
                         if (task.isSuccessful()) {
                             isUserAuthenticated = true;
@@ -87,15 +85,15 @@ public class SignUpLogin extends AppCompatActivity {
                             Toast.makeText(SignUpLogin.this, "Login credentials invalid", Toast.LENGTH_SHORT).show();
                         }
                     });
-            redirectIfLoggedIn();
+            redirectIfLoggedIn(emailEditText);
         } else {
-            if (TextUtils.isEmpty(emailEditText.getText())) {
-                Log.i("warn", "Empty username here" + emailEditText.getText().toString());
+            if (TextUtils.isEmpty(emailEditText)) {
+                Log.i("warn", "Empty username here" + emailEditText);
                 Toast.makeText(this, "Please enter valid email", Toast.LENGTH_SHORT);
                 return;
             }
-            if (TextUtils.isEmpty(otpEditText.getText())) {
-                Log.i("warn", "Empty password here" + otpEditText.getText().toString());
+            if (TextUtils.isEmpty(otpEditText)) {
+                Log.i("warn", "Empty password here" + otpEditText);
                 Toast.makeText(this, "Please enter password", Toast.LENGTH_SHORT);
                 return;
             }
@@ -104,27 +102,27 @@ public class SignUpLogin extends AppCompatActivity {
             progressDialog.show();*/
 
 
-            mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
-                @Override
-                public void onDataChange(final DataSnapshot dataSnapshot) {
-                    for (DataSnapshot data : dataSnapshot.getChildren()) {
-                        //If email exists then toast shows else store the data on new key
-                        for (DataSnapshot d : data.getChildren()) {
-                            if (d.getValue().equals(emailEditText.getText().toString())) {
-                                Toast.makeText(SignUpLogin.this, "E-mail is present there", Toast.LENGTH_SHORT).show();
-                            } else {
-                                Toast.makeText(SignUpLogin.this, "E-mail is not recognized, please contact customer care", Toast.LENGTH_SHORT).show();
+            DatabaseReference signUsers = mDatabase.getDatabase().getReference("signUsers");
+            signUsers.orderByChild("email").startAt(emailEditText).endAt(emailEditText)
+                    .addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            for (DataSnapshot ds : dataSnapshot.getChildren()) {
+                                String email = ds.child("email").getValue(String.class);
+                                Long otp = ds.child("otp").getValue(Long.class);
+                                String empId = ds.child("empId").getValue(String.class);
+                                if (otp.equals(Long.parseLong(otpEditText)) && empId.equals(employeeIDEditText)) {
+                                    isUserAuthenticated = true;
+                                    redirectIfLoggedIn(emailEditText);
+                                }
                             }
                         }
-                    }
-                }
 
-                @Override
-                public void onCancelled(final DatabaseError databaseError) {
-                }
-            });
-
-
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+                            Toast.makeText(SignUpLogin.this, "Error with App database connection", Toast.LENGTH_SHORT).show();
+                        }
+                    });
 /*            firebaseAuth.createUserWithEmailAndPassword(emailEditText.getText().toString(), otpEditText.getText().toString())
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
@@ -137,7 +135,7 @@ public class SignUpLogin extends AppCompatActivity {
                         }
                     }
                 });*/
-            redirectIfLoggedIn();
+            redirectIfLoggedIn(emailEditText);
         }
     }
 
@@ -150,6 +148,7 @@ public class SignUpLogin extends AppCompatActivity {
 
         firebaseAuth = FirebaseAuth.getInstance();
         progressDialog = new ProgressDialog(this);
-        redirectIfLoggedIn();
+        String emailEditText = ((EditText) findViewById(R.id.emailEditText)).getText().toString();
+        redirectIfLoggedIn(emailEditText);
     }
 }
