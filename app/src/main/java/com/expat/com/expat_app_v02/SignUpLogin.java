@@ -4,6 +4,7 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.text.Editable;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
@@ -69,13 +70,13 @@ public class SignUpLogin extends AppCompatActivity {
     }
 
     public void signupLogin(View view) {
-        String employeeIDEditText = ((EditText) findViewById(R.id.employeeIDEditText)).getText().toString();
-        String otpEditText = ((EditText) findViewById(R.id.otpEditText)).getText().toString();
-        String emailEditText = ((EditText) findViewById(R.id.emailEditText)).getText().toString();
-        String passwordEditText = ((EditText) findViewById(R.id.passwordEditText)).getText().toString();
+        Editable employeeIDEditText = ((EditText) findViewById(R.id.employeeIDEditText)).getText();
+        Editable otpEditText = ((EditText) findViewById(R.id.otpEditText)).getText();
+        Editable emailEditText = ((EditText) findViewById(R.id.emailEditText)).getText();
+        Editable passwordEditText = ((EditText) findViewById(R.id.passwordEditText)).getText();
 
         if (loginModeActive) {
-            firebaseAuth.signInWithEmailAndPassword(emailEditText, passwordEditText)
+            firebaseAuth.signInWithEmailAndPassword(emailEditText.toString(), passwordEditText.toString())
                     .addOnCompleteListener(this, (task) -> {
                         if (task.isSuccessful()) {
                             isUserAuthenticated = true;
@@ -85,7 +86,7 @@ public class SignUpLogin extends AppCompatActivity {
                             Toast.makeText(SignUpLogin.this, "Login credentials invalid", Toast.LENGTH_SHORT).show();
                         }
                     });
-            redirectIfLoggedIn(emailEditText);
+            redirectIfLoggedIn(emailEditText.toString());
         } else {
             if (TextUtils.isEmpty(emailEditText)) {
                 Log.i("warn", "Empty username here" + emailEditText);
@@ -103,7 +104,7 @@ public class SignUpLogin extends AppCompatActivity {
 
 
             DatabaseReference signUsers = mDatabase.getDatabase().getReference("signUsers");
-            signUsers.orderByChild("email").startAt(emailEditText).endAt(emailEditText)
+            signUsers.orderByChild("email").startAt(emailEditText.toString()).endAt(emailEditText.toString())
                     .addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(DataSnapshot dataSnapshot) {
@@ -111,9 +112,14 @@ public class SignUpLogin extends AppCompatActivity {
                                 String email = ds.child("email").getValue(String.class);
                                 Long otp = ds.child("otp").getValue(Long.class);
                                 String empId = ds.child("empId").getValue(String.class);
-                                if (otp.equals(Long.parseLong(otpEditText)) && empId.equals(employeeIDEditText)) {
+                                if (otp.equals(Long.parseLong(otpEditText.toString())) && empId.equals(employeeIDEditText.toString())) {
                                     isUserAuthenticated = true;
-                                    redirectIfLoggedIn(emailEditText);
+                                    redirectIfLoggedIn(emailEditText.toString());
+                                } else {
+                                    Toast.makeText(SignUpLogin.this, "Invalid email/Otp", Toast.LENGTH_SHORT).show();
+                                    emailEditText.clear();
+                                    otpEditText.clear();
+                                    employeeIDEditText.clear();
                                 }
                             }
                         }
@@ -123,19 +129,6 @@ public class SignUpLogin extends AppCompatActivity {
                             Toast.makeText(SignUpLogin.this, "Error with App database connection", Toast.LENGTH_SHORT).show();
                         }
                     });
-/*            firebaseAuth.createUserWithEmailAndPassword(emailEditText.getText().toString(), otpEditText.getText().toString())
-                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if(task.isSuccessful()){
-                            Toast.makeText(SignupLoginActivity.this, "User is registered successfully", Toast.LENGTH_SHORT).show();
-                        }
-                        else{
-                            Toast.makeText(SignupLoginActivity.this, "Could not register user", Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                });*/
-            redirectIfLoggedIn(emailEditText);
         }
     }
 
