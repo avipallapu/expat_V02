@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "909318937445",
+    "firebase_url": "https://expat-30405.firebaseio.com",
+    "project_id": "expat-30405",
+    "storage_bucket": "expat-30405.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:909318937445:android:c8c0cc5ec2732ce7",
+        "android_client_info": {
+          "package_name": "com.expat.com.expat_app_v02"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "909318937445-tgp3r81p3g955ii5krtq6kosfk32nkss.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.expat.com.expat_app_v02",
+            "certificate_hash": "ad872a567ca9340120f1ff26d24ba2e2d58bc446"
+          }
+        },
+        {
+          "client_id": "909318937445-9aln4i5tok7rc08v4sboko9bdseal7e8.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAdxoBawdR4dsgqiAxZWMm84dcnaBQZMAk"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "909318937445-9aln4i5tok7rc08v4sboko9bdseal7e8.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
