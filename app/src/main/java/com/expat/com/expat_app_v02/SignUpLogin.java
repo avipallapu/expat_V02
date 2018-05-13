@@ -81,12 +81,12 @@ public class SignUpLogin extends AppCompatActivity {
                         if (task.isSuccessful()) {
                             isUserAuthenticated = true;
                             Toast.makeText(SignUpLogin.this, "User logged in successfully", Toast.LENGTH_SHORT).show();
+                            redirectIfLoggedIn(emailEditText.toString());
                         } else {
                             isUserAuthenticated = false;
                             Toast.makeText(SignUpLogin.this, "Login credentials invalid", Toast.LENGTH_SHORT).show();
                         }
                     });
-            redirectIfLoggedIn(emailEditText.toString());
         } else {
             if (TextUtils.isEmpty(emailEditText)) {
                 Log.i("warn", "Empty username here" + emailEditText);
