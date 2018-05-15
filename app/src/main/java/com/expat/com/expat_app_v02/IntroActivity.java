@@ -29,11 +29,10 @@ public class IntroActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_intro);
 
-        mSlideViewPager = (ViewPager)findViewById(R.id.slideViewPager);
-        slideLinearLayout = (LinearLayout)findViewById(R.id.slideViewLinearLayout);
+        mSlideViewPager = findViewById(R.id.slideViewPager);
+        slideLinearLayout = findViewById(R.id.slideViewLinearLayout);
         sliderAdapter = new SliderAdapter(this);
         mSlideViewPager.setAdapter(sliderAdapter);
-
         buttonNext = findViewById(R.id.nextIntro);
         buttonSkip = findViewById(R.id.skipIntro);
 
@@ -43,7 +42,6 @@ public class IntroActivity extends AppCompatActivity {
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
 
             }
-
             @Override
             public void onPageSelected(int position) {
                 positionScroll = position;
@@ -54,12 +52,12 @@ public class IntroActivity extends AppCompatActivity {
                 }
                 setDotStatus(position);
             }
-
             @Override
             public void onPageScrollStateChanged(int state) {
 
             }
         });
+
         buttonSkip.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
