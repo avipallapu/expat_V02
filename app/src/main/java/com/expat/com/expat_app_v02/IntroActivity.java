@@ -47,6 +47,11 @@ public class IntroActivity extends AppCompatActivity {
             @Override
             public void onPageSelected(int position) {
                 positionScroll = position;
+                if(positionScroll==3) {
+                    buttonNext.setText("Finish");
+                }else{
+                    buttonNext.setText("Next");
+                }
                 setDotStatus(position);
             }
 
@@ -68,7 +73,7 @@ public class IntroActivity extends AppCompatActivity {
                 if(positionScroll==3) {
                     startMainActivity();
                 }else{
-                    mSlideViewPager.scrollTo(mSlideViewPager.getScrollX()+mSlideViewPager.getPaddingRight(), mSlideViewPager.getScrollY());
+                    mSlideViewPager.setCurrentItem(mSlideViewPager.getCurrentItem()+1);
                 }
             }
         });
