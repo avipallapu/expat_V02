@@ -46,13 +46,16 @@ public class SignUpLogin extends AppCompatActivity {
         EditText employeeIDEditText = findViewById(R.id.employeeIDEditText);
         EditText passwordEditText = findViewById(R.id.passwordEditText);
         EditText otpEditText = findViewById(R.id.otpEditText);
-
         Button loginSignupButton = findViewById(R.id.loginSignupButton);
         TextView toggleLoginModeTextView = findViewById(R.id.toggleLoginModeTextView);
         TextView resendOTPTextView = findViewById(R.id.resendOTPTextView);
+        TextView signupTextView = findViewById(R.id.signupTextView);
+
+
         if (loginModeActive) {
             loginModeActive = false;
             loginSignupButton.setText("Create Account");
+            signupTextView.setText("Sign Up");
             toggleLoginModeTextView.setText("Or, log in");
             employeeIDEditText.setVisibility(View.VISIBLE);
             otpEditText.setVisibility(View.VISIBLE);
@@ -61,6 +64,7 @@ public class SignUpLogin extends AppCompatActivity {
         } else {
             loginModeActive = true;
             loginSignupButton.setText("Log In");
+            signupTextView.setText("Log In");
             toggleLoginModeTextView.setText("Or, create account");
             employeeIDEditText.setVisibility(View.INVISIBLE);
             otpEditText.setVisibility(View.INVISIBLE);

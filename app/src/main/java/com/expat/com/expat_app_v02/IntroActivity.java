@@ -68,7 +68,7 @@ public class IntroActivity extends AppCompatActivity {
         buttonNext.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(positionScroll==3) {
+                 if(positionScroll==3) {
                     startMainActivity();
                 }else{
                     mSlideViewPager.setCurrentItem(mSlideViewPager.getCurrentItem()+1);
